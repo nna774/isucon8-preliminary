@@ -2,6 +2,7 @@ node[:repository] = 'git@github.com:nna774/isucon8-suburi-pixiv-isucon.git'
 node[:user] = 'isucon'
 node[:home] = "/home/#{node[:user]}"
 node[:deploy_to] = "#{node[:home]}/deploy"
+node[:static_dir] = "#{node[:deploy_to]}/public"
 
 node[:ssh_keys] = [
   # nana
