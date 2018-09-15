@@ -1,0 +1,9 @@
+#!/bin/bash -xe
+
+PWD=`pwd`
+
+echo "dump definicion of DBs and tables"
+mysqldump -u root -A -d > $PWD/mysqldump_def.sql
+
+echo "dump all data"
+mysqldump -u root -A > $PWD/mysqldump_all.sql
