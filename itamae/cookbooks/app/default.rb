@@ -23,4 +23,10 @@ execute 'deploy app' do
   GIT_SSH=#{git_ssh} git clone #{node[:repository]} #{node[:deploy_to]}-clone &&\
   ln -sf #{node[:deploy_to]}-clone/app #{node[:deploy_to]}
 EOC
+  notifies :run, 'execute[app restart]'
+end
+
+execute 'app restart' do
+  command node[:app_restart]
+  action :nothing
 end

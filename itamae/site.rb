@@ -3,6 +3,7 @@ node[:user] = 'isucon'
 node[:home] = "/home/#{node[:user]}"
 node[:deploy_to] = "#{node[:home]}/deploy"
 node[:static_dir] = "#{node[:deploy_to]}/public"
+node[:app_restart] = 'echo hello'
 
 node[:ssh_keys] = [
   # nana
