@@ -1,0 +1,4 @@
+isucon1:
+  properties:
+    run_list:
+      - cookbooks/hello.rb
