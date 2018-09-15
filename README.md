@@ -1,5 +1,10 @@
 # isucon8
 
+## ssh config
+
+ssh_configの中身を `~/.ssh/config` に書く。
+ip addrとuserをうまいこと合わせよう。
+
 ## itamae
 
 ### add deploy key
