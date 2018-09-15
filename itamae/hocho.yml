@@ -9,6 +9,9 @@ inventory_providers:
   - file:
       path: './hosts'
 
+initializers:
+  - site.rb
+
 driver_options:
   mitamae:
     mitamae_path: /usr/local/bin/mitamae
