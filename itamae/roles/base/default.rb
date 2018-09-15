@@ -4,6 +4,8 @@ include_cookbook 'lltsv'
 %w(
 git
 htop
+tcpdump
+telnet
 ).each do |p|
   package p
 end
