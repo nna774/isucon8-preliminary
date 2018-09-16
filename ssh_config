@@ -1,11 +1,11 @@
 Host isucon1
-    HostName 0.0.0.0
+    HostName 118.27.25.147
     User isucon
 
 Host isucon2
-    HostName 0.0.0.0
+    HostName 118.27.26.87
     User isucon
 
 Host isucon3
-    HostName 0.0.0.0
+    HostName 118.27.19.222
     User isucon

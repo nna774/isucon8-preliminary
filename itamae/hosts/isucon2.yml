@@ -1,0 +1,6 @@
+isucon2:
+  properties:
+    run_list:
+      - roles/base/default.rb
+      # - cookbooks/app/default.rb
+      # - cookbooks/nginx/default.rb
