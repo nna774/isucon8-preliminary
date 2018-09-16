@@ -59,9 +59,9 @@ module Torb
         db.query('BEGIN')
         begin
           events_raw = db.query('SELECT * FROM events ORDER BY id ASC').select(&where)
-          sheets = db.query('SELECT * FROM sheets ORDER BY `rank`, num')
+          sheets = db.query('SELECT * FROM sheets ORDER BY `rank`, num').to_a
           events = events_raw.map do |event_raw|
-            event = get_event(event_raw['id'], sheets: sheets, event: event_raw)
+            event = get_event(event_raw['id'], sheets: Marshal.load(Marshal.dump(sheets)), event: event_raw)
             event && event['sheets'].each { |sheet| sheet.delete('detail') }
             event
           end
@@ -87,7 +87,7 @@ module Torb
           event['sheets'][rank] = { 'total' => 0, 'remains' => 0, 'detail' => [] }
         end
 
-        sheets = db.query('SELECT * FROM sheets ORDER BY `rank`, num')
+        sheets ||= db.query('SELECT * FROM sheets ORDER BY `rank`, num')
         reservations = db.xquery('SELECT * FROM reservations WHERE event_id = ? AND sheet_id IN (SELECT id FROM sheets) AND canceled_at IS NULL GROUP BY event_id, sheet_id HAVING reserved_at = MIN(reserved_at)', event['id'])
         reservations_hash = {}
         reservations.each do |reservation|
