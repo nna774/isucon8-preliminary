@@ -70,7 +70,7 @@ module Torb
 
         end
         events = events_raw.map do |event_raw|
-          event = get_event(event_raw['id'], sheets: Marshal.load(Marshal.dump(sheets)), event: event_raw, reservations: reservations_list_hash[event_raw['id']])
+          event = get_event(event_raw['id'], sheets: sheets.dup), event: event_raw, reservations: reservations_list_hash[event_raw['id']])
           event && event['sheets'].each { |sheet| sheet.delete('detail') }
           event
         end
