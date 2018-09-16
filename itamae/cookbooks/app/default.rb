@@ -35,5 +35,11 @@ execute 'app restart' do
   action :nothing
 end
 
+execute 'daemon-reload' do
+  command 'systemctl daemon-reload'
+  action :nothing
+end
+
 remote_file '/etc/systemd/system/torb.ruby.service' do
+  notifies :run, 'execute[daemon-reload]'
 end

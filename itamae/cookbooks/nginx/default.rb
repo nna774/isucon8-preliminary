@@ -37,6 +37,13 @@ node.reverse_merge!(
 
 package 'nginx-all-modules'
 
+service 'nginx' do
+  action [:enable, :start]
+end
+service 'h20' do
+  action [:disable, :stop]
+end
+
 directory '/var/log/nginx' do
   owner 'nginx'
   group 'nginx'
