@@ -94,6 +94,8 @@ module Torb
           reservations_hash[reservation['sheet_id']] = reservation
         end
         sheets.each do |sheet|
+          raise 'sheet nil!!' if sheet.nil?
+          raise 'event nil!!' if event.nil?
           event['sheets'][sheet['rank']]['price'] ||= event['price'] + sheet['price']
           event['total'] += 1
           event['sheets'][sheet['rank']]['total'] += 1
