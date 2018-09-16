@@ -1,6 +1,6 @@
 node.reverse_merge!(
   nginx: {
-    user: 'www-data',
+    user: 'nginx',
     worker_processes: 'auto',
     worker_connections: 8192,
     worker_rlimit_nofile: 17824,
@@ -35,9 +35,11 @@ node.reverse_merge!(
   }
 )
 
+package 'nginx-all-modules'
+
 directory '/var/log/nginx' do
-  owner 'www-data'
-  group 'www-data'
+  owner 'nginx'
+  group 'nginx'
   mode  '0755'
 end
 
@@ -66,6 +68,6 @@ end
 end
 
 execute 'nginx try-reload' do
-  command 'nginx -t && systemctl try-reload-or-restart nginx.service'
+  command 'nginx -t && systemctl restart nginx.service'
   action :nothing
 end
