@@ -66,7 +66,8 @@ module Torb
             event
           end
           db.query('COMMIT')
-        rescue
+        rescue => e
+          p e
           db.query('ROLLBACK')
         end
 
