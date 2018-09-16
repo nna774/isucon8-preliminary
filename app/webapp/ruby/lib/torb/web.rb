@@ -58,9 +58,10 @@ module Torb
 
         db.query('BEGIN')
         begin
-          event_ids = db.query('SELECT * FROM events ORDER BY id ASC').select(&where).map { |e| e['id'] }
-          events = event_ids.map do |event_id|
-            event = get_event(event_id)
+          events_raw = db.query('SELECT * FROM events ORDER BY id ASC').select(&where)
+          sheets = db.query('SELECT * FROM sheets ORDER BY `rank`, num')
+          events = events_raw.map do |event|
+            event = get_event(event['id'], sheets: sheets, event: event)
             event['sheets'].each { |sheet| sheet.delete('detail') }
             event
           end
@@ -72,8 +73,8 @@ module Torb
         events
       end
 
-      def get_event(event_id, login_user_id = nil, sheets = nil)
-        event = db.xquery('SELECT * FROM events WHERE id = ?', event_id).first
+      def get_event(event_id, login_user_id = nil, sheets: nil, event: nil)
+        event ||= db.xquery('SELECT * FROM events WHERE id = ?', event_id).first
         return unless event
 
         # zero fill
@@ -84,7 +85,7 @@ module Torb
           event['sheets'][rank] = { 'total' => 0, 'remains' => 0, 'detail' => [] }
         end
 
-        sheets = db.query('SELECT * FROM sheets ORDER BY `rank`, num')
+        sheets ||= db.query('SELECT * FROM sheets ORDER BY `rank`, num')
         reservations = db.xquery('SELECT * FROM reservations WHERE event_id = ? AND sheet_id IN (SELECT id FROM sheets) AND canceled_at IS NULL GROUP BY event_id, sheet_id HAVING reserved_at = MIN(reserved_at)', event['id'])
         reservations_hash = {}
         reservations.each do |reservation|
