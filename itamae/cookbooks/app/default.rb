@@ -15,15 +15,18 @@ end
 execute 'deploy app' do
   user node[:user]
   command <<"EOC"
-  DIR=#{node[:deploy_to]}.back/`date +%d%H%M%S` &&\
-  mkdir -p $DIR;
-  [ -e #{node[:deploy_to]} ] && rsync -au --remove-source-files #{node[:deploy_to]}/ $DIR/;
-  ln -sf $DIR #{node[:deploy_to]}.back/current;
-  rm -fr "#{node[:deploy_to]}-clone";
-  GIT_SSH=#{git_ssh} git clone #{node[:repository]} #{node[:deploy_to]}-clone &&\
-  ln -sf #{node[:deploy_to]}-clone/app #{node[:deploy_to]}
+GIT_SSH=#{git_ssh} git pull
+ln -sf #{node[:deploy_to]}-tmp/app/webapp #{node[:deploy_to]}/webapp
 EOC
-  notifies :run, 'execute[app restart]'
+  cwd "#{node[:deploy_to]}-tmp"
+end
+
+execute 'bundle i' do
+  user node[:user]
+  command <<"EOC"
+~/local/ruby/bin/bundle install
+EOC
+  cwd "#{node[:deploy_to]}/webapp/ruby"
 end
 
 execute 'app restart' do

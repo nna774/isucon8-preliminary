@@ -1,7 +1,7 @@
 node[:repository] = 'git@github.com:nna774/isucon8-suburi-pixiv-isucon.git'
 node[:user] = 'isucon'
 node[:home] = "/home/#{node[:user]}"
-node[:deploy_to] = "#{node[:home]}/deploy"
+node[:deploy_to] = "#{node[:home]}/torb"
 node[:static_dir] = "#{node[:deploy_to]}/public"
 node[:app_restart] = 'echo hello'
 
