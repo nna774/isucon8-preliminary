@@ -60,8 +60,13 @@ module Torb
         begin
           events_raw = db.query('SELECT * FROM events ORDER BY id ASC').select(&where)
           sheets = db.query('SELECT * FROM sheets ORDER BY `rank`, num').to_a
+          reservations_list = db.query('SELECT * FROM reservations WHERE canceled_at IS NULL GROUP BY event_id, sheet_id HAVING reserved_at = MIN(reserved_at)')
+          reservations_list_hash = {}
+          reservations_list.each do |reservations|
+            reservations_list_hash[reservations['event_id']] = reservations
+          end
           events = events_raw.map do |event_raw|
-            event = get_event(event_raw['id'], sheets: Marshal.load(Marshal.dump(sheets)), event: event_raw)
+            event = get_event(event_raw['id'], sheets: Marshal.load(Marshal.dump(sheets)), event: event_raw, reservations: reservations_list_hash[event_raw['id']])
             event && event['sheets'].each { |sheet| sheet.delete('detail') }
             event
           end
@@ -75,7 +80,7 @@ module Torb
         events
       end
 
-      def get_event(event_id, login_user_id = nil, sheets: nil, event: nil)
+      def get_event(event_id, login_user_id = nil, sheets: nil, event: nil, reservations: nil)
         event ||= db.xquery('SELECT * FROM events WHERE id = ?', event_id).first
         return unless event
 
@@ -88,7 +93,7 @@ module Torb
         end
 
         sheets ||= db.query('SELECT * FROM sheets ORDER BY `rank`, num')
-        reservations = db.xquery('SELECT * FROM reservations WHERE event_id = ? AND canceled_at IS NULL GROUP BY event_id, sheet_id HAVING reserved_at = MIN(reserved_at)', event['id'])
+        reservations ||= db.xquery('SELECT * FROM reservations WHERE event_id = ? AND canceled_at IS NULL GROUP BY event_id, sheet_id HAVING reserved_at = MIN(reserved_at)', event['id'])
         reservations_hash = {}
         reservations.each do |reservation|
           reservations_hash[reservation['sheet_id']] = reservation
