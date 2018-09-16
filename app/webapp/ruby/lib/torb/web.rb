@@ -56,7 +56,6 @@ module Torb
       def get_events(where = nil)
         where ||= ->(e) { e['public_fg'] }
 
-        db.query('BEGIN')
         begin
           events_raw = db.query('SELECT * FROM events ORDER BY id ASC').select(&where)
           sheets = db.query('SELECT * FROM sheets ORDER BY `rank`, num').to_a
@@ -75,11 +74,9 @@ module Torb
             event && event['sheets'].each { |sheet| sheet.delete('detail') }
             event
           end
-          db.query('COMMIT')
         rescue => e
           p e
           puts e.backtrace.join("\n")
-          db.query('ROLLBACK')
         end
 
         events
