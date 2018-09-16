@@ -60,8 +60,8 @@ module Torb
         begin
           events_raw = db.query('SELECT * FROM events ORDER BY id ASC').select(&where)
           sheets = db.query('SELECT * FROM sheets ORDER BY `rank`, num')
-          events = events_raw.map do |event|
-            event = get_event(event['id'], sheets: sheets, event: event)
+          events = events_raw.map do |event_raw|
+            event = get_event(event_raw['id'], sheets: sheets, event: event_raw)
             event['sheets'].each { |sheet| sheet.delete('detail') }
             event
           end
