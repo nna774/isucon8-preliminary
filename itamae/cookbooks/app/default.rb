@@ -16,6 +16,7 @@ execute 'deploy app' do
   user node[:user]
   command <<"EOC"
 GIT_SSH=#{git_ssh} git pull
+rm #{node[:deploy_to]}/webapp
 ln -sf #{node[:deploy_to]}-tmp/app/webapp #{node[:deploy_to]}/webapp
 EOC
   cwd "#{node[:deploy_to]}-tmp"
