@@ -171,7 +171,13 @@ module Torb
     end
 
     get '/initialize' do
-      system "../../db/init.sh"
+      system "curl http://172.18.25.3/initialize_db3"
+
+      status 204
+    end
+
+    get '/initialize_db3' do
+      system "/home/isucon/torb/db/init.sh"
 
       status 204
     end
