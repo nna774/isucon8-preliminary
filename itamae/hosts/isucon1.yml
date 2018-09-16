@@ -4,3 +4,4 @@ isucon1:
       - roles/base/default.rb
       - cookbooks/app/default.rb
       - cookbooks/nginx/default.rb
+      - cookbooks/nginx/proxy.rb
