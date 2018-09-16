@@ -62,7 +62,7 @@ module Torb
           sheets = db.query('SELECT * FROM sheets ORDER BY `rank`, num')
           events = events_raw.map do |event_raw|
             event = get_event(event_raw['id'], sheets: sheets, event: event_raw)
-            event['sheets'].each { |sheet| sheet.delete('detail') }
+            event && event['sheets'].each { |sheet| sheet.delete('detail') }
             event
           end
           db.query('COMMIT')
