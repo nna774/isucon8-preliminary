@@ -72,7 +72,7 @@ module Torb
         events
       end
 
-      def get_event(event_id, login_user_id = nil)
+      def get_event(event_id, login_user_id = nil, sheets = nil)
         event = db.xquery('SELECT * FROM events WHERE id = ?', event_id).first
         return unless event
 
@@ -85,7 +85,7 @@ module Torb
         end
 
         sheets = db.query('SELECT * FROM sheets ORDER BY `rank`, num')
-        reservations = db.xquery('SELECT * FROM reservations WHERE event_id = ? AND sheet_id IN (SELECT id FROM sheets) AND canceled_at IS NULL GROUP BY event_id, sheet_id HAVING reserved_at = MIN(reserved_at)', event['id']).to_a
+        reservations = db.xquery('SELECT * FROM reservations WHERE event_id = ? AND sheet_id IN (SELECT id FROM sheets) AND canceled_at IS NULL GROUP BY event_id, sheet_id HAVING reserved_at = MIN(reserved_at)', event['id'])
         reservations_hash = {}
         reservations.each do |reservation|
           reservations_hash[reservation['sheet_id']] = reservation
