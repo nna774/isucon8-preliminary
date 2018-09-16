@@ -376,7 +376,7 @@ module Torb
       password   = body_params['password']
 
       administrator = db.xquery('SELECT * FROM administrators WHERE login_name = ?', login_name).first
-      pass_hash     = db.xquery('SELECT SHA2(?, 256) AS pass_hash', password).first['pass_hash']
+      pass_hash     = OpenSSL::Digest::SHA256.hexdigest(password)
       halt_with_error 401, 'authentication_failed' if administrator.nil? || pass_hash != administrator['pass_hash']
 
       session['administrator_id'] = administrator['id']
