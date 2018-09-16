@@ -62,8 +62,12 @@ module Torb
           sheets = db.query('SELECT * FROM sheets ORDER BY `rank`, num').to_a
           reservations_list = db.query('SELECT * FROM reservations WHERE canceled_at IS NULL GROUP BY event_id, sheet_id HAVING reserved_at = MIN(reserved_at)')
           reservations_list_hash = {}
-          reservations_list.each do |reservations|
-            reservations_list_hash[reservations['event_id']] = reservations
+          reservations_list.each do |reservation|
+            if reservations_list_hash.has_key?(reservation['event_id']) then
+              reservations_list_hash[reservation['event_id']] << reservation
+            else
+              reservations_list_hash[reservation['event_id']] = [reservation]
+
           end
           events = events_raw.map do |event_raw|
             event = get_event(event_raw['id'], sheets: Marshal.load(Marshal.dump(sheets)), event: event_raw, reservations: reservations_list_hash[event_raw['id']])
