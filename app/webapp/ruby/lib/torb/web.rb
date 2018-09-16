@@ -278,7 +278,7 @@ module Torb
 
       session['user_id'] = user['id']
 
-      usre_ = {}
+      user_ = {}
       user_['id'] = user['id']
       user_['nickname'] = user['nickname']
       user_.to_json
