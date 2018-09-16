@@ -68,7 +68,7 @@ module Torb
           db.query('COMMIT')
         rescue => e
           p e
-          p e.backtrace.join("\n")
+          puts e.backtrace.join("\n")
           db.query('ROLLBACK')
         end
 
