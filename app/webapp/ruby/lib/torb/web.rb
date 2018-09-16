@@ -278,8 +278,9 @@ module Torb
 
       session['user_id'] = user['id']
 
-      user = get_login_user
-      user.to_json
+      user_['id'] = user['id']
+      user_['nickname'] = user['nickname']
+      user_.to_json
     end
 
     post '/api/actions/logout', login_required: true do
