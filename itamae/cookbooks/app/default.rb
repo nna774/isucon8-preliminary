@@ -33,3 +33,6 @@ execute 'app restart' do
   command node[:app_restart]
   action :nothing
 end
+
+remote_file '/etc/systemd/system/torb.ruby.service' do
+end
