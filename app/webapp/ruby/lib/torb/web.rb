@@ -67,6 +67,7 @@ module Torb
               reservations_list_hash[reservation['event_id']] << reservation
             else
               reservations_list_hash[reservation['event_id']] = [reservation]
+            end
 
           end
           events = events_raw.map do |event_raw|
