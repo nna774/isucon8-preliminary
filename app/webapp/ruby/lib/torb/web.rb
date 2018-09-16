@@ -85,12 +85,18 @@ module Torb
         end
 
         sheets = db.query('SELECT * FROM sheets ORDER BY `rank`, num')
+        reservations = db.xquery('SELECT * FROM reservations WHERE event_id = ? AND sheet_id IN (SELECT id FROM sheets) AND canceled_at IS NULL GROUP BY event_id, sheet_id HAVING reserved_at = MIN(reserved_at)', event['id'], sheet['id']).to_a
+        reservations_hash = {}
+        reservations.each do |reservation|
+          reservations_hash[reservation['sheet_id']] = reservation
+        end
         sheets.each do |sheet|
           event['sheets'][sheet['rank']]['price'] ||= event['price'] + sheet['price']
           event['total'] += 1
           event['sheets'][sheet['rank']]['total'] += 1
 
-          reservation = db.xquery('SELECT * FROM reservations WHERE event_id = ? AND sheet_id = ? AND canceled_at IS NULL GROUP BY event_id, sheet_id HAVING reserved_at = MIN(reserved_at)', event['id'], sheet['id']).first
+          #reservation = db.xquery('SELECT * FROM reservations WHERE event_id = ? AND sheet_id = ? AND canceled_at IS NULL GROUP BY event_id, sheet_id HAVING reserved_at = MIN(reserved_at)', event['id'], sheet['id']).first
+          reservation = reservations_hash[sheet['id']]
           if reservation
             sheet['mine']        = true if login_user_id && reservation['user_id'] == login_user_id
             sheet['reserved']    = true
